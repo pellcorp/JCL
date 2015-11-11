@@ -48,7 +48,11 @@ import org.xeustechnologies.jcl.utils.Utils;
 @SuppressWarnings("unchecked")
 public abstract class AbstractClassLoader extends ClassLoader {
 
-	protected final List<ProxyClassLoader> loaders = new ArrayList<ProxyClassLoader>();
+	// we could use concurrent sorted set like ConcurrentSkipListSet here instead, which would be automatically sorted
+	// and wouldn't require the lock.
+	// But that was added in 1.6, and according to Maven we're targeting 1.5+.
+	/** Note that all iterations over this list *must* synchronize on it first! */
+	protected final List<ProxyClassLoader> loaders = Collections.synchronizedList(new ArrayList<ProxyClassLoader>());
 
 	private final ProxyClassLoader systemLoader = new SystemLoader();
 	private final ProxyClassLoader parentLoader = new ParentLoader();
@@ -74,14 +78,20 @@ public abstract class AbstractClassLoader extends ClassLoader {
 	}
 
 	protected void addDefaultLoader() {
-		loaders.add(systemLoader);
-		loaders.add(parentLoader);
-		loaders.add(currentLoader);
-		loaders.add(threadLoader);
+		synchronized (loaders) {
+			loaders.add(systemLoader);
+			loaders.add(parentLoader);
+			loaders.add(currentLoader);
+			loaders.add(threadLoader);
+			Collections.sort(loaders);
+		}
 	}
 
 	public void addLoader(ProxyClassLoader loader) {
-		loaders.add(loader);
+		synchronized (loaders) {
+			loaders.add(loader);
+			Collections.sort(loaders);
+		}
 	}
 
 	/*
@@ -106,8 +116,6 @@ public abstract class AbstractClassLoader extends ClassLoader {
 		if (className == null || className.trim().equals(""))
 			return null;
 
-		Collections.sort(loaders);
-
 		Class clazz = null;
 
 		// Check osgi boot delegation
@@ -116,11 +124,13 @@ public abstract class AbstractClassLoader extends ClassLoader {
 		}
 
 		if (clazz == null) {
-			for (ProxyClassLoader l : loaders) {
-				if (l.isEnabled()) {
-					clazz = l.loadClass(className, resolveIt);
-					if (clazz != null)
-						break;
+			synchronized (loaders) {
+				for (ProxyClassLoader l : loaders) {
+					if (l.isEnabled()) {
+						clazz = l.loadClass(className, resolveIt);
+						if (clazz != null)
+							break;
+					}
 				}
 			}
 		}
@@ -143,8 +153,6 @@ public abstract class AbstractClassLoader extends ClassLoader {
 		if (name == null || name.trim().equals(""))
 			return null;
 
-		Collections.sort(loaders);
-
 		InputStream is = null;
 
 		// Check osgi boot delegation
@@ -153,11 +161,13 @@ public abstract class AbstractClassLoader extends ClassLoader {
 		}
 
 		if (is == null) {
-			for (ProxyClassLoader l : loaders) {
-				if (l.isEnabled()) {
-					is = l.loadResource(name);
-					if (is != null)
-						break;
+			synchronized (loaders) {
+				for (ProxyClassLoader l : loaders) {
+					if (l.isEnabled()) {
+						is = l.loadResource(name);
+						if (is != null)
+							break;
+					}
 				}
 			}
 		}
