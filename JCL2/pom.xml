@@ -7,7 +7,7 @@
 	<name>Jar Class Loader</name>
 	<url>http://jcloader.sourceforge.net
 	</url>
-	<version>2.4-SNAPSHOT</version>
+	<version>2.4-pellcorp</version>
 	<packaging>pom</packaging>
 	<description>Jar Class Loader</description>
 
@@ -63,12 +63,12 @@
 		<url>http://sourceforge.net/tracker/?group_id=177055
 		</url>
 	</issueManagement>
-	<distributionManagement>
-		<site>
-			<id>sourceforge-jcl</id>
-			<url>scp://shell.sourceforge.net/home/groups/j/jc/jcloader/htdocs
-			</url>
-		</site>
+	
+<distributionManagement>
+		<repository>
+			<id>repo</id>
+			<url>${maven.repo.dir}/releases</url>
+		</repository>
 	</distributionManagement>
 	<mailingLists>
 		<mailingList>
@@ -228,4 +228,5 @@
 			<version>2.2</version>
 		</dependency>
 	</dependencies>
+
 </project>

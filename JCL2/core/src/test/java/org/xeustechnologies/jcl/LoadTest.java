@@ -14,6 +14,7 @@ import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.runner.RunWith;
@@ -110,6 +111,7 @@ public class LoadTest extends TestCase {
     }
 
     @Test
+    @Ignore
     public void testInterfaceCast() {
         JarClassLoader jc = new JarClassLoader();
         jc.add( "./target/test-jcl.jar" );
