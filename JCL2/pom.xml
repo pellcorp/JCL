@@ -6,7 +6,7 @@
 	<name>Jar Class Loader</name>
 	<url>http://jcloader.sourceforge.net
 	</url>
-	<version>2.7</version>
+	<version>2.7-pellcorp</version>
 	<packaging>pom</packaging>
 	<description>Jar Class Loader</description>
 
@@ -181,4 +181,11 @@
             </build>
         </profile>
     </profiles>
+
+<distributionManagement>
+		<repository>
+			<id>repo</id>
+			<url>${maven.repo.dir}/releases</url>
+		</repository>
+	</distributionManagement>
 </project>

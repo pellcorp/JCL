@@ -138,67 +138,67 @@ public abstract class AbstractClassLoader extends ClassLoader {
      *
      * @see java.lang.ClassLoader#getResource(java.lang.String)
      */
-    @Override
-    public URL getResource(String name) {
-        if (name == null || name.trim().equals(""))
-            return null;
-
-        URL url = null;
-
-        // Check osgi boot delegation
-        if (osgiBootLoader.isEnabled()) {
-            url = osgiBootLoader.findResource(name);
-        }
-
-        if (url == null) {
-            synchronized (loaders) {
-                for (ProxyClassLoader l : loaders) {
-                    if (l.isEnabled()) {
-                        url = l.findResource(name);
-                        if (url != null)
-                            break;
-                    }
-                }
-            }
-        }
-
-        return url;
-
-    }
-
-    @Override
-    public Enumeration<URL> getResources(String name) throws IOException {
-        if (name == null || name.trim().equals("")) {
-            return Collections.emptyEnumeration();
-        }
-
-        Vector<URL> urlVector = new Vector<URL>();
-        URL url = null;
-
-        // Check osgi boot delegation
-        if (osgiBootLoader.isEnabled()) {
-            url = osgiBootLoader.findResource(name);
-
-            if (url != null) {
-                urlVector.add(url);
-            }
-        }
-
-        if (url == null) {
-            synchronized (loaders) {
-                for (ProxyClassLoader l : loaders) {
-                    if (l.isEnabled()) {
-                        url = l.findResource(name);
-                        if (url != null) {
-                            urlVector.add(url);
-                        }
-                    }
-                }
-            }
-        }
-
-        return urlVector.elements();
-    }
+//    @Override
+//    public URL getResource(String name) {
+//        if (name == null || name.trim().equals(""))
+//            return null;
+//
+//        URL url = null;
+//
+//        // Check osgi boot delegation
+//        if (osgiBootLoader.isEnabled()) {
+//            url = osgiBootLoader.findResource(name);
+//        }
+//
+//        if (url == null) {
+//            synchronized (loaders) {
+//                for (ProxyClassLoader l : loaders) {
+//                    if (l.isEnabled()) {
+//                        url = l.findResource(name);
+//                        if (url != null)
+//                            break;
+//                    }
+//                }
+//            }
+//        }
+//
+//        return url;
+//
+//    }
+//
+//    @Override
+//    public Enumeration<URL> getResources(String name) throws IOException {
+//        if (name == null || name.trim().equals("")) {
+//            return Collections.emptyEnumeration();
+//        }
+//
+//        Vector<URL> urlVector = new Vector<URL>();
+//        URL url = null;
+//
+//        // Check osgi boot delegation
+//        if (osgiBootLoader.isEnabled()) {
+//            url = osgiBootLoader.findResource(name);
+//
+//            if (url != null) {
+//                urlVector.add(url);
+//            }
+//        }
+//
+//        if (url == null) {
+//            synchronized (loaders) {
+//                for (ProxyClassLoader l : loaders) {
+//                    if (l.isEnabled()) {
+//                        url = l.findResource(name);
+//                        if (url != null) {
+//                            urlVector.add(url);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return urlVector.elements();
+//    }
 
     /**
      * Overrides the getResourceAsStream method to load non-class resources from
